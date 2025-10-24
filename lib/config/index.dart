@@ -1,4 +1,6 @@
 import 'package:fake_store_app/core/repositories/auth_repository.dart';
+import 'package:fake_store_app/core/repositories/product_repository.dart';
+import 'package:fake_store_app/screens/home_screen/cubits/cubit/get_products_cubit.dart';
 import 'package:fake_store_app/screens/home_screen/index.dart';
 import 'package:fake_store_app/screens/intro_screen/index.dart';
 import 'package:fake_store_app/screens/login_screen/cubit/login/login_cubit.dart';

@@ -16,13 +16,17 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    context.read<GetProductsCubit>().execute();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final disabledColor = Color(0xFFCBCBD4);
     final screenHeight = MediaQuery.of(context).size.height;
     final t = AppLocalizations.of(context)!;
     final textTheme = Theme.of(context).textTheme;
-
-    final products = mockProducts;
 
     return Scaffold(
       body: SafeArea(

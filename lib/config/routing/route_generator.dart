@@ -23,7 +23,14 @@ class RouteGenerator {
           ),
         );
       case RouteNames.homeScreen:
-        return MaterialPageRoute(builder: (_) => const HomeScreen());
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => GetProductsCubit(
+              productRepository: context.read<ProductRepository>(),
+            ),
+            child: const HomeScreen(),
+          ),
+        );
       case RouteNames.productDetailScreen:
         return MaterialPageRoute(builder: (_) => const ProductDetailScreen());
 

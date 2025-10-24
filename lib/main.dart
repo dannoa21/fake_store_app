@@ -1,6 +1,8 @@
 import 'package:fake_store_app/config/index.dart';
 import 'package:fake_store_app/core/cubits/auth/auth_cubit.dart';
 import 'package:fake_store_app/core/repositories/auth_repository.dart';
+import 'package:fake_store_app/core/repositories/product_repository.dart';
+import 'package:fake_store_app/screens/home_screen/cubits/cubit/wishlist/wishlist_cubit.dart';
 import 'package:fake_store_app/utils/services/network/index.dart';
 import 'package:fake_store_app/utils/services/shared_prefs/index.dart';
 import 'package:fake_store_app/localization/app_localizations.dart';
@@ -40,6 +42,11 @@ class MyApp extends StatelessWidget {
             client: context.read<NetworkImplService>(),
           ),
         ),
+        RepositoryProvider(
+          create: (context) => ProductRepository(
+            client: context.read<NetworkImplService>(),
+          ),
+        ),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -47,6 +54,9 @@ class MyApp extends StatelessWidget {
             create: (context) => AuthCubit(
               authRepository: context.read<AuthRepository>(),
             )..checkUserIsAuthenticated(),
+          ),
+          BlocProvider(
+            create: (context) => WishlistCubit(),
           ),
         ],
         child: Builder(

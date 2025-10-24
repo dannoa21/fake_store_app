@@ -17,7 +17,7 @@ class WishlistItemCard extends StatelessWidget {
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.fromLTRB(12, 12, 4, 12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -72,9 +72,13 @@ class WishlistItemCard extends StatelessWidget {
               const SizedBox(width: 12),
               Column(
                 children: [
-                  Icon(
-                    Icons.favorite,
-                    color: Colors.red,
+                  IconButton(
+                    onPressed: () =>
+                        context.read<WishlistCubit>().toggleWishlist(product),
+                    icon: Icon(
+                      Icons.favorite,
+                      color: Colors.red,
+                    ),
                   ),
                 ],
               ),
