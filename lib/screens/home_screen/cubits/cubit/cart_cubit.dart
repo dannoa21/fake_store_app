@@ -73,5 +73,10 @@ class CartCubit extends Cubit<CartState> {
 
   int get uniqueItemCount => state.cart.length;
 
+  double get cartTotal => state.cart.fold(
+    0.0,
+    (sum, item) => sum + (item.product.price * item.quantity),
+  );
+
   void clearCart() => emit(const CartState(cart: []));
 }
