@@ -5,22 +5,25 @@ class CustomButton extends StatelessWidget {
     super.key,
     required this.buttonText,
     required this.onPressed,
+    this.isLoading = false,
   });
   final String buttonText;
-  final Function() onPressed;
+  final bool isLoading;
+  final Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: colorScheme.primary,
         elevation: 1,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(6),
           side: BorderSide(
             width: 1,
-            color: Theme.of(context).colorScheme.onSurface,
+            color: colorScheme.onSurface,
           ),
         ),
       ),
@@ -28,10 +31,16 @@ class CustomButton extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          isLoading
+              ? CircularProgressIndicator(
+                  color: colorScheme.onPrimary,
+                  strokeWidth: 2,
+                ) //TODO: fix size of loading indicator
+              : SizedBox.shrink(),
           Text(
             buttonText,
             style: TextStyle(
-              color: Theme.of(context).colorScheme.onPrimary,
+              color: colorScheme.onPrimary,
               fontSize: 16,
               fontWeight: FontWeight.w600,
             ),

@@ -4,10 +4,12 @@ class CustomTextFormField extends StatefulWidget {
   const CustomTextFormField({
     super.key,
     required this.onChanged,
+    required this.validator,
     this.hintText,
     this.obscureAllowed = false,
   });
   final Function(String)? onChanged;
+  final FormFieldValidator<String>? validator;
   final String? hintText;
   final bool obscureAllowed;
 
@@ -51,6 +53,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       ),
       obscureText: widget.obscureAllowed ? obscureText : false,
       onChanged: widget.onChanged,
+      validator: widget.validator,
     );
   }
 }

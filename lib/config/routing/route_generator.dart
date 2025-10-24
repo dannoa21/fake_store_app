@@ -7,14 +7,28 @@ class RouteGenerator {
       case RouteNames.introScreen:
         return MaterialPageRoute(builder: (_) => const IntroScreen());
       case RouteNames.loginScreen:
-        return MaterialPageRoute(builder: (_) => const LoginScreen());
+        return MaterialPageRoute(
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (context) => LoginDataCubit(),
+              ),
+              BlocProvider(
+                create: (context) => LoginCubit(
+                  authRepository: context.read<AuthRepository>(),
+                ),
+              ),
+            ],
+            child: const LoginScreen(),
+          ),
+        );
       case RouteNames.homeScreen:
         return MaterialPageRoute(builder: (_) => const HomeScreen());
       case RouteNames.productDetailScreen:
         return MaterialPageRoute(builder: (_) => const ProductDetailScreen());
 
       default:
-        return MaterialPageRoute(builder: (_) => const IntroScreen());
+        return MaterialPageRoute(builder: (_) => const SplashScreen());
     }
   }
 }

@@ -31,23 +31,71 @@ class LoginScreen extends StatelessWidget {
                 ),
                 kVerticalSpace32,
                 CustomTextFormField(
-                  onChanged: (value) {},
+                  onChanged: (value) {
+                    context.read<LoginDataCubit>().updateUsername(value);
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Invalid username";
+                    }
+                    return null;
+                  },
                   hintText: t.enterUsernameHint,
                 ),
                 kVerticalSpace16,
                 CustomTextFormField(
-                  onChanged: (value) {},
+                  onChanged: (value) {
+                    context.read<LoginDataCubit>().updatePassword(value);
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Password can't be empty";
+                    }
+                    if (value.length < 5) {
+                      return "Password must be at least 5 characters"; // for demo
+                    }
+                    return null;
+                  },
                   hintText: t.enterPasswordHint,
                   obscureAllowed: true,
                 ),
                 kVerticalSpace32,
-                CustomButton(
-                  buttonText: t.login,
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(
-                      RouteNames.homeScreen,
-                    );
+                BlocListener<LoginCubit, LoginState>(
+                  listener: (context, loginState) {
+                    if (loginState is LoginSuccessState) {
+                      Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (_) => HomeScreen()),
+                        (Route<dynamic> route) =>
+                            false, // remove all previous routes
+                      );
+                    } else if (loginState is LoginErrorState) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(loginState.message),
+                        ),
+                      );
+                    }
                   },
+                  child: BlocBuilder<LoginDataCubit, LoginDataState>(
+                    builder: (context, loginDataState) {
+                      return CustomButton(
+                        buttonText: t.login,
+                        isLoading:
+                            context.watch<LoginCubit>().state
+                                is LoginLoadingState,
+                        onPressed: loginDataState.isValid
+                            ? () {
+                                final username = loginDataState.username;
+                                final password = loginDataState.password;
+                                context.read<LoginCubit>().login(
+                                  username: username,
+                                  password: password,
+                                );
+                              }
+                            : null,
+                      );
+                    },
+                  ),
                 ),
                 Spacer(flex: 2),
               ],
