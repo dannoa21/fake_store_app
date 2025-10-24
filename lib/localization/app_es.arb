@@ -1,0 +1,6 @@
+{
+  "@@locale": "es",
+  "appTitle": "Fake Store Spanish",
+  "login": "Login spanish",
+  "emptyFieldError":"This field can not be empty."
+}

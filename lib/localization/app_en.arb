@@ -1,0 +1,19 @@
+{
+  "@@locale": "en",
+  "appTitle": "Fake Store",
+  "login": "Login",
+  "welcomeBack": "Welcome back! Glad to see you, Again!",
+  "enterUsernameHint": "Enter your username",
+  "enterPasswordHint": "Enter your password",
+  "welcome": "Welcome",
+  "reviews": "Reviews",
+  "price": "Price",
+  "category": "Category",
+  "cart": "Cart",
+  "logOut": "Log out",
+  "cartTotal": "Cart total",
+  "checkout": "Checkout",
+  "wishlist": "Wishlist",
+  "addToCart": "Add to cart",
+  "emptyFieldError":"This field can not be empty."
+}
