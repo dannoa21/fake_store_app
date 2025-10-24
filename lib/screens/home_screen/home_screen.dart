@@ -40,18 +40,23 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: textTheme.headlineSmall,
                   ),
 
-                  Column(
-                    children: [
-                      SvgIcon(
-                        iconName: "logout",
-                        width: 32,
-                        height: 32,
-                      ),
-                      Text(
-                        t.logOut,
-                        style: textTheme.bodySmall,
-                      ),
-                    ],
+                  GestureDetector(
+                    onTap: () {
+                      context.read<AuthCubit>().logOutUser();
+                    },
+                    child: Column(
+                      children: [
+                        SvgIcon(
+                          iconName: "logout",
+                          width: 32,
+                          height: 32,
+                        ),
+                        Text(
+                          t.logOut,
+                          style: textTheme.bodySmall,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

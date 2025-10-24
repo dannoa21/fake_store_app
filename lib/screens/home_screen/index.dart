@@ -1,11 +1,13 @@
 import 'package:fake_store_app/config/index.dart';
 import 'package:fake_store_app/core/components/custom_button.dart';
 import 'package:fake_store_app/core/components/svg_icon/index.dart';
+import 'package:fake_store_app/core/cubits/auth/auth_cubit.dart';
 import 'package:fake_store_app/core/mocks/mock_products.dart';
 import 'package:fake_store_app/localization/app_localizations.dart';
 import 'package:fake_store_app/models/index.dart';
 import 'package:fake_store_app/utils/constants/index.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 part 'home_screen.dart';
 part 'home_tab_section.dart';
 part 'wishlist_tab_section.dart';
