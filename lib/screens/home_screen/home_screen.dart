@@ -44,22 +44,35 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: textTheme.headlineSmall,
                   ),
 
-                  GestureDetector(
-                    onTap: () {
-                      context.read<AuthCubit>().logOutUser();
+                  BlocListener<LogoutCubit, LogoutState>(
+                    listener: (context, state) {
+                      if (state is LogoutSuccessState) {
+                        // After logout, emit unauthenticated state in AuthCubit
+                        context.read<AuthCubit>().emitUnauthenticated();
+                        Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(builder: (_) => IntroScreen()),
+                          (route) => false,
+                        );
+                      }
+                      // TODO: implement listener
                     },
-                    child: Column(
-                      children: [
-                        SvgIcon(
-                          iconName: "logout",
-                          width: 32,
-                          height: 32,
-                        ),
-                        Text(
-                          t.logOut,
-                          style: textTheme.bodySmall,
-                        ),
-                      ],
+                    child: GestureDetector(
+                      onTap: () {
+                        context.read<LogoutCubit>().logout();
+                      },
+                      child: Column(
+                        children: [
+                          SvgIcon(
+                            iconName: "logout",
+                            width: 32,
+                            height: 32,
+                          ),
+                          Text(
+                            t.logOut,
+                            style: textTheme.bodySmall,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],

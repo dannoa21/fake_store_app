@@ -40,16 +40,7 @@ class AuthCubit extends Cubit<AuthState> {
     emit(UserNotAuthenticatedState());
   }
 
-  Future<void> logOutUser() async {
-    try {
-      SharedPreferencesService sharedPreferencesService =
-          SharedPreferencesService();
-      await sharedPreferencesService.remove(
-        SharedPreferencesKeys.authToken,
-      );
-      emit(UserNotAuthenticatedState());
-    } catch (e) {
-      emit(UserAuthenticatedState(user: mockUser));
-    }
+  Future<void> emitUnauthenticated() async {
+    emit(UserNotAuthenticatedState());
   }
 }

@@ -24,12 +24,7 @@ class RouteGenerator {
         );
       case RouteNames.homeScreen:
         return MaterialPageRoute(
-          builder: (_) => BlocProvider(
-            create: (context) => GetProductsCubit(
-              productRepository: context.read<ProductRepository>(),
-            ),
-            child: const HomeScreen(),
-          ),
+          builder: (_) => const HomeScreen(),
         );
       case RouteNames.productDetailScreen:
         final args = settings.arguments as ProductDetailScreenArguments;
