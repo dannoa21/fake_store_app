@@ -16,7 +16,7 @@ class WishlistTabSection extends StatelessWidget {
               child: ListView.builder(
                 itemCount: products.length,
                 itemBuilder: (context, index) {
-                  final product = products[0];
+                  final product = products[index];
                   return WishlistItemCard(
                     product: product,
                     onAddToCart: () {
