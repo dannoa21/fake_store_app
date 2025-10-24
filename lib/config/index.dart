@@ -6,6 +6,7 @@ import 'package:fake_store_app/screens/intro_screen/index.dart';
 import 'package:fake_store_app/screens/login_screen/cubit/login/login_cubit.dart';
 import 'package:fake_store_app/screens/login_screen/cubit/login_data/login_data_cubit.dart';
 import 'package:fake_store_app/screens/login_screen/index.dart';
+import 'package:fake_store_app/screens/product_detail_screen/cubit/cubit/get_product_detail_cubit.dart';
 import 'package:fake_store_app/screens/product_detail_screen/index.dart';
 import 'package:fake_store_app/screens/splash_screen/index.dart';
 import 'package:fake_store_app/utils/constants/index.dart';

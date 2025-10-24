@@ -1,7 +1,29 @@
 part of 'index.dart';
 
-class ProductDetailScreen extends StatelessWidget {
-  const ProductDetailScreen({super.key});
+class ProductDetailScreenArguments {
+  ProductDetailScreenArguments({
+    required this.productId,
+  });
+  final int productId;
+}
+
+class ProductDetailScreen extends StatefulWidget {
+  const ProductDetailScreen({
+    super.key,
+    required this.productId,
+  });
+  final int productId;
+
+  @override
+  State<ProductDetailScreen> createState() => _ProductDetailScreenState();
+}
+
+class _ProductDetailScreenState extends State<ProductDetailScreen> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<GetProductDetailCubit>().execute(productId: widget.productId);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -10,36 +32,76 @@ class ProductDetailScreen extends StatelessWidget {
       backgroundColor: Color(0xFFF8F7FA),
       body: SafeArea(
         child: Center(
-          child: Column(
-            children: [
-              Expanded(
-                child: Column(
-                  children: [
-                    kVerticalSpace12,
-                    Padding(
-                      padding: const EdgeInsets.only(left: 12),
-                      child: Row(
-                        children: [
-                          BackButton(
-                            color: Colors.white,
-                          ),
-                        ],
+          child: BlocBuilder<GetProductDetailCubit, GetProductDetailState>(
+            builder: (context, state) {
+              if (state is GetProductDetailLoading) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (state is GetProductDetailFailure) {
+                return Center(
+                  child: Text(
+                    "Something happened! Try again.", // TODO: add button to retry
+                    style: textTheme.bodyLarge,
+                  ),
+                );
+              }
+              if (state is! GetProductDetailSuccess) {
+                return SizedBox.shrink(); //revisit
+              }
+
+              final product = state.product;
+              return Stack(
+                children: [
+                  Column(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          children: [
+                            kVerticalSpace12,
+                            Padding(
+                              padding: const EdgeInsets.only(left: 12),
+                              child: Row(
+                                children: [
+                                  BackButton(
+                                    color: Colors.white,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            kVerticalSpace32,
+                            AspectRatio(
+                              aspectRatio: 1,
+                              child: Image.network(
+                                product.image,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      _buildProductInfoSection(
+                        context: context,
+                        product: product,
+                      ),
+                      _buildProductPricingSection(context),
+                    ],
+                  ),
+                  Positioned(
+                    top: 12,
+                    left: 12,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: SvgIcon(
+                        iconName: "back",
                       ),
                     ),
-                    kVerticalSpace32,
-                    Image.asset(
-                      "assets/images/login_background.jpg",
-                      fit: BoxFit.contain,
-                      width: double.infinity,
-                      height: 420,
-                    ),
-                  ],
-                ),
-              ),
-              kVerticalSpace32,
-              _buildProductInfoSection(context),
-              _buildProductPricingSection(context),
-            ],
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ),
@@ -88,7 +150,10 @@ class ProductDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProductInfoSection(BuildContext context) {
+  Widget _buildProductInfoSection({
+    required BuildContext context,
+    required Product product,
+  }) {
     final textTheme = Theme.of(context).textTheme;
     return Container(
       width: double.infinity,
@@ -98,11 +163,11 @@ class ProductDetailScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Xbox One Elite Series 2 Controller",
+            product.title,
             style: textTheme.headlineLarge,
           ),
           Text(
-            "Gaming category",
+            product.category,
             style: textTheme.bodyMedium?.copyWith(
               fontWeight: FontWeight.bold,
               color: textTheme.bodyMedium?.color?.withOpacity(0.7),
@@ -118,7 +183,7 @@ class ProductDetailScreen extends StatelessWidget {
               ),
               const SizedBox(width: 4),
               Text(
-                "4.25",
+                product.rating.rate.toString(),
                 style: textTheme.bodySmall,
               ),
               const SizedBox(width: 12),

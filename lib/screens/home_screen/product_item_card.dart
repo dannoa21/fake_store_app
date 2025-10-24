@@ -20,6 +20,9 @@ class ProductItemCard extends StatelessWidget {
           onTap: () {
             Navigator.of(context).pushNamed(
               RouteNames.productDetailScreen,
+              arguments: ProductDetailScreenArguments(
+                productId: product.id,
+              ),
             );
           },
           child: Container(

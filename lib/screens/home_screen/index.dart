@@ -8,6 +8,7 @@ import 'package:fake_store_app/models/index.dart';
 import 'package:fake_store_app/screens/home_screen/cubits/cubit/cart_cubit.dart';
 import 'package:fake_store_app/screens/home_screen/cubits/cubit/get_products_cubit.dart';
 import 'package:fake_store_app/screens/home_screen/cubits/cubit/wishlist/wishlist_cubit.dart';
+import 'package:fake_store_app/screens/product_detail_screen/index.dart';
 import 'package:fake_store_app/utils/constants/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -32,7 +32,17 @@ class RouteGenerator {
           ),
         );
       case RouteNames.productDetailScreen:
-        return MaterialPageRoute(builder: (_) => const ProductDetailScreen());
+        final args = settings.arguments as ProductDetailScreenArguments;
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => GetProductDetailCubit(
+              productRepository: context.read<ProductRepository>(),
+            ),
+            child: ProductDetailScreen(
+              productId: args.productId,
+            ),
+          ),
+        );
 
       default:
         return MaterialPageRoute(builder: (_) => const SplashScreen());

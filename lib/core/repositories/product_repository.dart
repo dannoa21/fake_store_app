@@ -9,6 +9,8 @@ import 'package:fake_store_app/utils/services/network/index.dart';
 abstract class BaseProductRepository {
   /// Returns a Future that resolves to a list of [Product] objects.
   Future<List<Product>> fetchProducts();
+
+  Future<Product> fetchProductDetail({required int id});
 }
 
 /// Implementation of [BaseProductRepository] for fetching products.
@@ -27,6 +29,21 @@ class ProductRepository implements BaseProductRepository {
 
       final List<dynamic> data = json.decode(response);
       return data.map((item) => Product.fromMap(item)).toList();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Product> fetchProductDetail({required int id}) async {
+    try {
+      final response = await _client.get(
+        url: '/products/$id',
+        parameters: {},
+      );
+
+      final product = Product.fromJson(response);
+      return product;
     } catch (e) {
       rethrow;
     }
