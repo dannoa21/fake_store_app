@@ -1,4 +1,5 @@
 import 'package:fake_store_app/config/index.dart';
+import 'package:fake_store_app/screens/splash_screen/index.dart';
 import 'package:fake_store_app/utils/services/shared_prefs/index.dart';
 import 'package:fake_store_app/localization/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       onGenerateRoute: (settings) => RouteGenerator.generateRoute(settings),
-      // home: IntroScreen(),
+      home: SplashScreen(),
     );
   }
 }
