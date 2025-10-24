@@ -39,7 +39,7 @@ class CartCubit extends Cubit<CartState> {
     emit(CartState(cart: currentCart));
   }
 
-  void removeFromCart(int productId) {
+  void removeFromCart({required int productId}) {
     try {
       final currentCart = state.cart
           .where((item) => item.product.id != productId)
@@ -52,7 +52,7 @@ class CartCubit extends Cubit<CartState> {
 
   void updateQuantity(int productId, int newQuantity) {
     if (newQuantity <= 0) {
-      removeFromCart(productId);
+      removeFromCart(productId: productId);
       return;
     }
     final currentCart = state.cart.map((item) {

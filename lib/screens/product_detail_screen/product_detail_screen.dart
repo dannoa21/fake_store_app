@@ -28,86 +28,90 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    return Scaffold(
-      backgroundColor: Color(0xFFF8F7FA),
-      body: SafeArea(
-        child: Center(
-          child: BlocBuilder<GetProductDetailCubit, GetProductDetailState>(
-            builder: (context, state) {
-              if (state is GetProductDetailLoading) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else if (state is GetProductDetailFailure) {
-                return Center(
-                  child: Text(
-                    "Something happened! Try again.", // TODO: add button to retry
-                    style: textTheme.bodyLarge,
-                  ),
-                );
-              }
-              if (state is! GetProductDetailSuccess) {
-                return SizedBox.shrink(); //revisit
-              }
+    return BlocBuilder<CartCubit, CartState>(
+      builder: (context, cartState) {
+        return Scaffold(
+          backgroundColor: Color(0xFFF8F7FA),
+          body: SafeArea(
+            child: Center(
+              child: BlocBuilder<GetProductDetailCubit, GetProductDetailState>(
+                builder: (context, state) {
+                  if (state is GetProductDetailLoading) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (state is GetProductDetailFailure) {
+                    return Center(
+                      child: Text(
+                        "Something happened! Try again.", // TODO: add button to retry
+                        style: textTheme.bodyLarge,
+                      ),
+                    );
+                  }
+                  if (state is! GetProductDetailSuccess) {
+                    return SizedBox.shrink(); //revisit
+                  }
 
-              final product = state.product;
-              return Stack(
-                children: [
-                  Column(
+                  final product = state.product;
+                  return Stack(
                     children: [
-                      Expanded(
-                        child: Column(
-                          children: [
-                            kVerticalSpace12,
-                            Padding(
-                              padding: const EdgeInsets.only(left: 12),
-                              child: Row(
-                                children: [
-                                  BackButton(
-                                    color: Colors.white,
+                      Column(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              children: [
+                                kVerticalSpace12,
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 12),
+                                  child: Row(
+                                    children: [
+                                      BackButton(
+                                        color: Colors.white,
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
+                                ),
+                                kVerticalSpace32,
+                                AspectRatio(
+                                  aspectRatio: 1,
+                                  child: Image.network(
+                                    product.image,
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              ],
                             ),
-                            kVerticalSpace32,
-                            AspectRatio(
-                              aspectRatio: 1,
-                              child: Image.network(
-                                product.image,
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                          ],
+                          ),
+                          _buildProductInfoSection(
+                            context: context,
+                            product: product,
+                          ),
+                          _buildProductPricingSection(
+                            context: context,
+                            product: product,
+                          ),
+                        ],
+                      ),
+                      Positioned(
+                        top: 12,
+                        left: 12,
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: SvgIcon(
+                            iconName: "back",
+                          ),
                         ),
                       ),
-                      _buildProductInfoSection(
-                        context: context,
-                        product: product,
-                      ),
-                      _buildProductPricingSection(
-                        context: context,
-                        product: product,
-                      ),
                     ],
-                  ),
-                  Positioned(
-                    top: 12,
-                    left: 12,
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: SvgIcon(
-                        iconName: "back",
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            },
+                  );
+                },
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -142,30 +146,39 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             ],
           ),
           kHorizontalSpace12,
-          context.read<CartCubit>().isInCart(product)
-              ? Text(
-                  "In Cart", // todo: ask design to maybe redirect to cart screen or sth
-                  style: textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.green,
-                  ),
-                )
-              : Expanded(
-                  child: SizedBox(
-                    height: 48,
-                    child: CustomButton(
-                      buttonText: t.addToCart,
-                      onPressed: () {
-                        context.read<CartCubit>().addToCart(
-                          product: product,
-                        );
-                      },
-                    ),
-                  ),
-                ),
+          _buildProductCartStatusSection(
+            product: product,
+          ),
         ],
       ),
     );
+  }
+
+  Widget _buildProductCartStatusSection({required Product product}) {
+    final t = AppLocalizations.of(context)!;
+    final textTheme = Theme.of(context).textTheme;
+    final isInCart = context.read<CartCubit>().isInCart(product);
+    return isInCart
+        ? Text(
+            "In Cart", // todo: ask design to maybe redirect to cart screen or sth
+            style: textTheme.bodyLarge?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: Colors.green,
+            ),
+          )
+        : Expanded(
+            child: SizedBox(
+              height: 48,
+              child: CustomButton(
+                buttonText: t.addToCart,
+                onPressed: () {
+                  context.read<CartCubit>().addToCart(
+                    product: product,
+                  );
+                },
+              ),
+            ),
+          );
   }
 
   Widget _buildProductInfoSection({

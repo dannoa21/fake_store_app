@@ -1,121 +1,115 @@
 part of 'index.dart';
 
-class CartItemCard extends StatefulWidget {
-  final String image;
-  final String title;
-  final double price;
+class CartItemCard extends StatelessWidget {
+  final Product product;
+  final int quantity;
 
   const CartItemCard({
     super.key,
-    required this.image,
-    required this.title,
-    required this.price,
+    required this.product,
+    required this.quantity,
   });
-
-  @override
-  State<CartItemCard> createState() => _CartItemCardState();
-}
-
-class _CartItemCardState extends State<CartItemCard> {
-  int quantity = 1;
-
-  void _increaseQuantity() {
-    setState(() {
-      quantity++;
-    });
-  }
-
-  void _decreaseQuantity() {
-    if (quantity > 1) {
-      setState(() {
-        quantity--;
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          // Product image
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: Image.network(
-              widget.image,
-              width: 70,
-              height: 70,
-              fit: BoxFit.cover,
-            ),
+    return BlocBuilder<CartCubit, CartState>(
+      builder: (context, cartState) {
+        final cartItem = cartState.cart.firstWhere(
+          (item) => item.product.id == product.id,
+        );
+        return Container(
+          margin: const EdgeInsets.only(bottom: 16),
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
           ),
-          const SizedBox(width: 16),
-
-          // Product title + quantity control
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.title,
-                  style: textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Product image
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.network(
+                  product.image,
+                  width: 70,
+                  height: 70,
+                  fit: BoxFit.cover,
                 ),
-                const SizedBox(height: 12),
-                Container(
-                  height: 44,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[300]!),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      _QuantityButton(
-                        iconName: "minus-circle",
-                        onPressed: _decreaseQuantity,
+              ),
+              const SizedBox(width: 16),
+
+              // Product title + quantity control
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      product.title,
+                      style: textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
                       ),
-                      Container(
-                        width: 40,
-                        alignment: Alignment.center,
-                        child: Text(
-                          quantity.toString(),
-                          style: textTheme.titleMedium,
-                        ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 12),
+                    Container(
+                      height: 44,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey[300]!),
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      _QuantityButton(
-                        iconName: "plus-circle",
-                        onPressed: _increaseQuantity,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          _QuantityButton(
+                            iconName: "minus-circle",
+                            onPressed: () {
+                              context.read<CartCubit>().updateQuantity(
+                                product.id,
+                                cartItem.quantity - 1,
+                              );
+                            },
+                          ),
+                          Container(
+                            width: 40,
+                            alignment: Alignment.center,
+                            child: Text(
+                              quantity.toString(),
+                              style: textTheme.titleMedium,
+                            ),
+                          ),
+                          _QuantityButton(
+                            iconName: "plus-circle",
+                            onPressed: () {
+                              context.read<CartCubit>().updateQuantity(
+                                product.id,
+                                cartItem.quantity + 1,
+                              );
+                            },
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
+              ),
 
-          const SizedBox(width: 16),
+              const SizedBox(width: 16),
 
-          // Price
-          Text(
-            "\$${widget.price.toStringAsFixed(2)}",
-            style: textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+              // Price
+              Text(
+                "\$${product.price.toStringAsFixed(2)}",
+                style: textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
