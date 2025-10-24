@@ -2,6 +2,7 @@ import 'package:fake_store_app/config/index.dart';
 import 'package:fake_store_app/core/cubits/auth/auth_cubit.dart';
 import 'package:fake_store_app/core/repositories/auth_repository.dart';
 import 'package:fake_store_app/core/repositories/product_repository.dart';
+import 'package:fake_store_app/screens/home_screen/cubits/cubit/cart_cubit.dart';
 import 'package:fake_store_app/screens/home_screen/cubits/cubit/wishlist/wishlist_cubit.dart';
 import 'package:fake_store_app/utils/services/network/index.dart';
 import 'package:fake_store_app/utils/services/shared_prefs/index.dart';
@@ -57,6 +58,9 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
             create: (context) => WishlistCubit(),
+          ),
+          BlocProvider(
+            create: (context) => CartCubit(),
           ),
         ],
         child: Builder(
