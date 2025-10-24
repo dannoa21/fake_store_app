@@ -84,7 +84,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         context: context,
                         product: product,
                       ),
-                      _buildProductPricingSection(context),
+                      _buildProductPricingSection(
+                        context: context,
+                        product: product,
+                      ),
                     ],
                   ),
                   Positioned(
@@ -108,7 +111,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
   }
 
-  Widget _buildProductPricingSection(BuildContext context) {
+  Widget _buildProductPricingSection({
+    required BuildContext context,
+    required Product product,
+  }) {
     final t = AppLocalizations.of(context)!;
     final textTheme = Theme.of(context).textTheme;
     return Container(
@@ -126,7 +132,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 ),
               ),
               Text(
-                "\$79.99",
+                "\$${product.price.toStringAsFixed(2)}",
                 style: textTheme.bodyLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: textTheme.bodyLarge?.color?.withOpacity(0.7),
@@ -136,15 +142,27 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             ],
           ),
           kHorizontalSpace12,
-          Expanded(
-            child: SizedBox(
-              height: 48,
-              child: CustomButton(
-                buttonText: t.addToCart,
-                onPressed: () {},
-              ),
-            ),
-          ),
+          context.read<CartCubit>().isInCart(product)
+              ? Text(
+                  "In Cart", // todo: ask design to maybe redirect to cart screen or sth
+                  style: textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green,
+                  ),
+                )
+              : Expanded(
+                  child: SizedBox(
+                    height: 48,
+                    child: CustomButton(
+                      buttonText: t.addToCart,
+                      onPressed: () {
+                        context.read<CartCubit>().addToCart(
+                          product: product,
+                        );
+                      },
+                    ),
+                  ),
+                ),
         ],
       ),
     );

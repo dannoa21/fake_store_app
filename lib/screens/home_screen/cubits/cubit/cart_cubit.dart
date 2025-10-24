@@ -8,7 +8,11 @@ part 'cart_state.dart';
 class CartCubit extends Cubit<CartState> {
   CartCubit() : super(CartState());
 
-  void addToCart(Product product, {int quantity = 1}) {
+  void addToCart({
+    required Product product,
+    int toBeAddedQuantity =
+        1, // default to 1, but if we randomly want to add more than 1 at once
+  }) {
     final currentCart = List<CartItem>.from(
       state.cart,
     );
@@ -21,14 +25,14 @@ class CartCubit extends Cubit<CartState> {
       final CartItem existingItem = currentCart[existingItemIndex];
       currentCart[existingItemIndex] = CartItem(
         product: existingItem.product,
-        quantity: existingItem.quantity + quantity,
+        quantity: existingItem.quantity + toBeAddedQuantity,
       );
     } else {
       // Product doesn't exist, add new item
       currentCart.add(
         CartItem(
           product: product,
-          quantity: quantity,
+          quantity: toBeAddedQuantity,
         ),
       );
     }
@@ -36,10 +40,14 @@ class CartCubit extends Cubit<CartState> {
   }
 
   void removeFromCart(int productId) {
-    final currentCart = state.cart
-        .where((item) => item.product.id != productId)
-        .toList();
-    emit(CartState(cart: currentCart));
+    try {
+      final currentCart = state.cart
+          .where((item) => item.product.id != productId)
+          .toList();
+      emit(CartState(cart: currentCart));
+    } catch (e) {
+      debugPrint('Error removing item from cart: $e');
+    }
   }
 
   void updateQuantity(int productId, int newQuantity) {
